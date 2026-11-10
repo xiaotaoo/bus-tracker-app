@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BusServiceArrival, RouteStop } from '../types/transit';
-import { SERVICE_190_ROUTE_STOPS } from '../data/singaporeTransitData';
+import { getRouteStopsForService } from '../data/singaporeTransitData';
 import { Bus, Bell, ArrowRight, Search } from 'lucide-react';
 
 interface SchematicRouteMapProps {
@@ -18,10 +18,10 @@ export const SchematicRouteMap: React.FC<SchematicRouteMapProps> = ({
 }) => {
   const [filterQuery, setFilterQuery] = useState('');
 
-  const baseStops = SERVICE_190_ROUTE_STOPS;
   const serviceNo = selectedService?.serviceNo || '190';
   const destination = selectedService?.destinationName || 'Kampong Bahru Ter';
   const origin = selectedService?.originName || 'Choa Chu Kang Int';
+  const baseStops = getRouteStopsForService(serviceNo, currentStopCode);
 
   const filteredStops = baseStops.filter(
     (s) =>

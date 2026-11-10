@@ -29,6 +29,8 @@ export interface BusServiceArrival {
   frequencyRange: string;
 }
 
+export type TransitRegion = 'Central' | 'East' | 'North' | 'North-East' | 'West';
+
 export interface BusStop {
   code: string; // 5-digit code e.g. "01012"
   name: string; // e.g. "Victoria St / Bugis Stn Exit A"
@@ -36,8 +38,21 @@ export interface BusStop {
   lat: number;
   lng: number;
   distanceMeters?: number;
+  region?: TransitRegion;
+  isInterchange?: boolean;
   mrtConnections?: { code: string; color: string; name: string }[];
   services: BusServiceArrival[];
+}
+
+export interface SingaporeServiceDirectoryItem {
+  serviceNo: string;
+  operator: TransitOperator;
+  category: 'Trunk' | 'Express' | 'Feeder' | 'NightRider';
+  originName: string;
+  destinationName: string;
+  frequencyRange: string;
+  operatingHours: string;
+  primaryStops: string[]; // stop codes served
 }
 
 export interface RouteStop {

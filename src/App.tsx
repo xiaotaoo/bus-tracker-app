@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { INITIAL_BUS_STOPS, RAIL_LINES_STATUS, COMMUTER_ADVISORIES } from './data/singaporeTransitData';
+import {
+  INITIAL_BUS_STOPS,
+  ALL_SINGAPORE_BUS_STOPS,
+  RAIL_LINES_STATUS,
+  COMMUTER_ADVISORIES,
+  createDynamicBusStop,
+} from './data/singaporeTransitData';
 import { BusStop, BusServiceArrival, RouteStop } from './types/transit';
 import { HeaderBar } from './components/HeaderBar';
 import { ArrivalCard } from './components/ArrivalCard';
@@ -29,13 +35,27 @@ import {
 const REFRESH_INTERVAL_SECONDS = 15;
 
 export default function App() {
-  const [stops, setStops] = useState<BusStop[]>(INITIAL_BUS_STOPS);
+  const [stops, setStops] = useState<BusStop[]>(ALL_SINGAPORE_BUS_STOPS);
   const [selectedStopCode, setSelectedStopCode] = useState<string>('01012');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeFilter, setActiveFilter] = useState<'all' | 'favorites' | 'sea_only' | 'dd_only' | 'wab_only'>('all');
   const [direction, setDirection] = useState<1 | 2>(1);
   const [selectedService, setSelectedService] = useState<BusServiceArrival | null>(null);
   const [activeTab, setActiveTab] = useState<ActiveTab>('board');
+
+  const handleSelectStop = useCallback((stop: BusStop) => {
+    setStops((prev) => {
+      const exists = prev.some((s) => s.code === stop.code);
+      if (!exists) {
+        return [...prev, stop];
+      }
+      return prev;
+    });
+    setSelectedStopCode(stop.code);
+    if (stop.services.length > 0) {
+      setSelectedService(stop.services[0]);
+    }
+  }, []);
 
   // Auto-refresh countdown
   const [refreshCountdown, setRefreshCountdown] = useState<number>(REFRESH_INTERVAL_SECONDS);
@@ -372,11 +392,11 @@ export default function App() {
               </div>
 
               <BusStopSelector
-                stops={stops}
+                stops={INITIAL_BUS_STOPS}
+                allStops={stops}
                 selectedStop={currentStop}
                 onSelectStop={(stop) => {
-                  setSelectedStopCode(stop.code);
-                  if (stop.services.length > 0) setSelectedService(stop.services[0]);
+                  handleSelectStop(stop);
                   setActiveTab('board');
                 }}
                 searchQuery={searchQuery}
@@ -386,6 +406,7 @@ export default function App() {
                 favoritesCount={favorites.length}
                 direction={direction}
                 onDirectionToggle={() => setDirection((d) => (d === 1 ? 2 : 1))}
+                onOpenSearchAll={() => setIsSearchOpen(true)}
               />
             </div>
           </div>
@@ -428,8 +449,7 @@ export default function App() {
         onClose={() => setIsSearchOpen(false)}
         stops={stops}
         onSelectStop={(stop) => {
-          setSelectedStopCode(stop.code);
-          if (stop.services.length > 0) setSelectedService(stop.services[0]);
+          handleSelectStop(stop);
           setActiveTab('board');
         }}
         onSelectService={(service) => {

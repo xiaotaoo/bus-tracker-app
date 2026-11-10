@@ -41,12 +41,7 @@ export interface DatamallRequestOptions {
  * Retrieves AccountKey safely from environment variables without hardcoding.
  */
 export function getDatamallAccountKey(): string {
-  return (
-    process.env.LTA_DATAMALL_API_KEY ||
-    process.env.ACCOUNT_KEY ||
-    process.env.LTA_ACCOUNT_KEY ||
-    ''
-  ).trim();
+  return (process.env.LTA_DATAMALL_API_KEY || '').trim();
 }
 
 /**
@@ -63,7 +58,7 @@ export async function queryLtaDatamall(
       success: false,
       status: 401,
       warning:
-        'AccountKey not configured. Set LTA_DATAMALL_API_KEY or ACCOUNT_KEY in your environment variables (.env).',
+        'AccountKey not configured. Set LTA_DATAMALL_API_KEY in your environment variables (.env).',
     };
   }
 

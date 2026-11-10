@@ -21,11 +21,7 @@ export interface HealthCheckResponse {
 }
 
 export const getHealthData = (): HealthCheckResponse => {
-  const accountKey =
-    process.env.LTA_DATAMALL_API_KEY ||
-    process.env.ACCOUNT_KEY ||
-    process.env.LTA_ACCOUNT_KEY ||
-    '';
+  const accountKey = process.env.LTA_DATAMALL_API_KEY || '';
 
   return {
     status: 'ok',

@@ -120,7 +120,7 @@ export const DatamallApiModal: React.FC<DatamallApiModalProps> = ({ isOpen, onCl
               <p className="text-[11px] leading-relaxed">
                 {isKeyConfigured
                   ? 'Active LTA Datamall AccountKey detected. Serverless requests will stream live from the Singapore Datamall servers.'
-                  : 'Add your free LTA AccountKey to .env as LTA_DATAMALL_API_KEY="your_key" or ACCOUNT_KEY="your_key". The endpoints are ready and waiting.'}
+                  : 'Add your free LTA AccountKey to .env as LTA_DATAMALL_API_KEY="your_key". The endpoints are ready and waiting.'}
               </p>
             </div>
           </div>
